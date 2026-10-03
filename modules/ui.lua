@@ -363,7 +363,7 @@ function UI:RefreshLootPage()
     local liveKey = DungeonLog.modules.Catalog:GetLiveDBKey(entry)
     local boss = Log:FindBossByName(liveKey, logFrame.selectedBossName)
 
-    logFrame.header:SetText(logFrame.selectedBossName or "Encounter")
+    logFrame.header:SetText(entry.name .. " - " .. (logFrame.selectedBossName or "Encounter"))
     local killCount = (boss and boss.killCount) or 0
     logFrame.subtitle:SetText(string.format("%d kill%s", killCount, killCount == 1 and "" or "s"))
 
