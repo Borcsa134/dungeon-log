@@ -1,0 +1,8 @@
+## Interface: 16001
+## Title: Dungeon Log
+## Notes: A visual guide tracking dungeon and boss discovery for WoW Forever
+## Author: Boris Makes Stuff
+## Version: @project-version@
+## SavedVariables: DungeonLogDB
+
+DungeonLog.lua
