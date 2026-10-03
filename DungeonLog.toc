@@ -8,5 +8,6 @@
 
 DungeonLog.lua
 modules/config.lua
+modules/catalog.lua
 modules/ui.lua
 modules/log.lua
