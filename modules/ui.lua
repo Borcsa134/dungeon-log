@@ -139,6 +139,7 @@ local function acquireRow(pool, parent, index, height)
     row:SetHeight(height)
     row:SetScript("OnEnter", nil)
     row:SetScript("OnLeave", nil)
+    row:RegisterForClicks("LeftButtonUp")
     row.icon:SetSize(height - 8, height - 8)
     row:Show()
     return row
@@ -378,7 +379,12 @@ function UI:RefreshBossLoot(dungeon, boss)
         row:SetScript("OnLeave", function()
             GameTooltip:Hide()
         end)
-        row:SetScript("OnClick", nil)
+        row:RegisterForClicks("AnyUp")
+        row:SetScript("OnClick", function()
+            if link then
+                HandleModifiedItemClick(link)
+            end
+        end)
 
         y = y + LOOT_ROW_HEIGHT
     end
