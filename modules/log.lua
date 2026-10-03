@@ -45,6 +45,10 @@ local function getItemInfo(itemIDorLink)
     return name, link, quality, icon
 end
 
+local function normName(s)
+    return (s or ""):gsub("^%s+", ""):gsub("%s+$", ""):lower()
+end
+
 function Log:Initialize()
     debugEnabled = DungeonLog.modules.Config and DungeonLog.modules.Config:GetSetting("debug") or false
     self:RegisterEvents()
@@ -184,7 +188,6 @@ function Log:RecordLoot(boss, encounterID, itemID, itemLink)
 end
 
 function Log:OnItemInfoReceived(itemID, success)
-    if not pendingItems[itemID] then return end
     if success == false then return end
 
     local name, _, quality, icon = getItemInfo(itemID)
@@ -211,97 +214,26 @@ function Log:GetDropRate(boss, itemID)
     return boss.killCount and boss.killCount > 0 and (item.seen / boss.killCount * 100) or 0
 end
 
-local DUMMY_DUNGEONS = {
-    ["Deadmines"] = {
-        marker = true,
-        bosses = {
-            [63] = { name = "Rhahk'Zor", killCount = 8, loot = {
-                [1931] = 5,
-                [4942] = 2,
-            } },
-            [66] = { name = "Mr. Smite", killCount = 6, loot = {
-                [7005] = 6,
-                [871]  = 1,
-                [1986] = 3,
-            } },
-            [71] = { name = "Edwin VanCleef", killCount = 4, loot = {
-                [1951] = 4,
-                [2277] = 2,
-                [2278] = 1,
-            } },
-        },
-    },
-    ["Wailing Caverns"] = {
-        marker = true,
-        bosses = {
-            [161] = { name = "Lady Anacondra", killCount = 3, loot = {
-                [10758] = 2,
-            } },
-            [166] = { name = "Verdan the Everliving", killCount = 2, loot = {
-                [6625] = 1,
-                [10410] = 2,
-            } },
-        },
-    },
-    ["Shadowfang Keep"] = {
-        marker = true,
-        bosses = {},
-    },
-}
-
-function Log:LoadDummyData()
-    for dungeonName, data in pairs(DUMMY_DUNGEONS) do
-        local dungeon = {
-            discovered = true,
-            firstEntered = time(),
-            dummy = true,
-            bosses = {},
-        }
-        for encounterID, b in pairs(data.bosses) do
-            local boss = {
-                name = b.name,
-                discovered = true,
-                killed = (b.killCount or 0) > 0,
-                killCount = b.killCount or 0,
-                firstKill = time(),
-                loot = {},
-            }
-            for itemID, seen in pairs(b.loot) do
-                local name, link, quality, icon = getItemInfo(itemID)
-                boss.loot[itemID] = {
-                    link = link or ("item:" .. itemID),
-                    name = name or ("Item " .. itemID),
-                    quality = quality,
-                    icon = icon,
-                    seen = seen,
-                }
-                if not name then
-                    pendingItems[itemID] = true
-                    if C_Item and C_Item.RequestLoadItemDataByID then
-                        C_Item.RequestLoadItemDataByID(itemID)
-                    end
-                end
-            end
-            dungeon.bosses[encounterID] = boss
-        end
-        DungeonLogDB.dungeons[dungeonName] = dungeon
-    end
-    DungeonLog.modules.UI:RefreshIfShown()
+function Log:NormalizeName(s)
+    return normName(s)
 end
 
-function Log:ClearDummyData()
-    for name, dungeon in pairs(DungeonLogDB.dungeons) do
-        if dungeon.dummy then
-            DungeonLogDB.dungeons[name] = nil
+function Log:FindBossByName(liveDBKey, bossName)
+    local dungeon = liveDBKey and DungeonLogDB.dungeons[liveDBKey]
+    if not dungeon then return nil, nil end
+    local target = normName(bossName)
+    for id, boss in pairs(dungeon.bosses) do
+        if normName(boss.name) == target then
+            return boss, id
         end
     end
+    return nil, nil
+end
+
+function Log:ResetAll()
+    DungeonLogDB.dungeons = {}
+    wipe(lootWindows)
+    wipe(pendingItems)
     DungeonLog.modules.UI:ClearSelection()
     DungeonLog.modules.UI:RefreshIfShown()
-end
-
-function Log:HasDummyData()
-    for _, dungeon in pairs(DungeonLogDB.dungeons) do
-        if dungeon.dummy then return true end
-    end
-    return false
 end

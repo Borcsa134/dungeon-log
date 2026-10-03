@@ -64,27 +64,37 @@ function Config:ShowUI()
 end
 
 function Config:RegisterSlashCommand()
+    StaticPopupDialogs["DUNGEONLOG_RESET"] = {
+        text = "Reset Dungeon Log?\nThis permanently clears all recorded dungeons, bosses, and loot.",
+        button1 = YES,
+        button2 = NO,
+        OnAccept = function()
+            DungeonLog.modules.Log:ResetAll()
+            print("|cff66ccffDungeonLog:|r all data has been reset")
+        end,
+        timeout = 0,
+        whileDead = true,
+        hideOnEscape = true,
+        showAlert = true,
+        preferredIndex = 3,
+    }
+
     SLASH_DUNGEONLOG1 = "/dungeonlog"
     SLASH_DUNGEONLOG2 = "/dl"
     SlashCmdList["DUNGEONLOG"] = function(msg)
-        msg = (msg or ""):lower():gsub("^%s+", ""):gsub("%s+$", "")
-        if msg == "config" then
+        msg = (msg or ""):gsub("^%s+", ""):gsub("%s+$", "")
+        local cmd, rest = msg:match("^(%S+)%s*(.-)$")
+        cmd = (cmd or ""):lower()
+        if cmd == "config" then
             Config:ShowUI()
-        elseif msg == "debug" then
-            local enabled = not Config:GetSetting("debug")
-            Config:SetSetting("debug", enabled)
-            DungeonLog.modules.Log:SetDebug(enabled)
-            print("|cff66ccffDungeonLog:|r debug logging " .. (enabled and "ON" or "OFF"))
-        elseif msg == "dummy" then
-            local Log = DungeonLog.modules.Log
-            if Log:HasDummyData() then
-                Log:ClearDummyData()
-                print("|cff66ccffDungeonLog:|r dummy data cleared")
-            else
-                Log:LoadDummyData()
-                DungeonLog.modules.UI:ShowUI()
-                print("|cff66ccffDungeonLog:|r dummy data loaded (run /dl dummy again to clear)")
-            end
+        elseif cmd == "reset" then
+            StaticPopup_Show("DUNGEONLOG_RESET")
+        elseif cmd == "unlock" then
+            DungeonLog.modules.Debug:UnlockByName(rest)
+        elseif cmd == "debug" then
+            DungeonLog.modules.Debug:ToggleDebug()
+        elseif cmd == "dummy" then
+            DungeonLog.modules.Debug:ToggleDummyData()
         else
             DungeonLog.modules.UI:ShowUI()
         end
