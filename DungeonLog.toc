@@ -4,6 +4,7 @@
 ## Author: Boris Makes Stuff
 ## Version: @project-version@
 ## SavedVariables: DungeonLogDB
+## X-Curse-Project-ID: 1724596
 
 DungeonLog.lua
 modules/config.lua
