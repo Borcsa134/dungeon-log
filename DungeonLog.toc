@@ -6,3 +6,6 @@
 ## SavedVariables: DungeonLogDB
 
 DungeonLog.lua
+modules/config.lua
+modules/ui.lua
+modules/log.lua
