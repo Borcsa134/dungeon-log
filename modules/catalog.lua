@@ -314,6 +314,17 @@ function Catalog:GetSortedEntries()
     return sortedCache
 end
 
+function Catalog:GetEntriesByKind(isRaid)
+    local sorted = self:GetSortedEntries()
+    local list = {}
+    for i = 1, #sorted do
+        if (sorted[i].isRaid and true or false) == (isRaid and true or false) then
+            list[#list + 1] = sorted[i]
+        end
+    end
+    return list
+end
+
 function Catalog:GetEntryByKey(name)
     for i = 1, #self.entries do
         if self.entries[i].name == name then

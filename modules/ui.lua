@@ -70,8 +70,55 @@ function UI:CreateUI()
     logFrame.lootPool = {}
 
     logFrame.view = "grid"
+    logFrame.gridTab = "dungeons"
     logFrame.selectedCatalogKey = nil
     logFrame.selectedBossName = nil
+
+    self:CreateTabs()
+end
+
+function UI:CreateTabs()
+    local function makeTab(id, text)
+        local tab = CreateFrame("Button", "DungeonLogFrameTab" .. id, logFrame, "PanelTabButtonTemplate")
+        tab:SetID(id)
+        tab:SetText(text)
+        if PanelTemplates_TabResize then PanelTemplates_TabResize(tab, 0) end
+        tab:SetScript("OnClick", function(self)
+            logFrame.gridTab = (self:GetID() == 1) and "dungeons" or "raids"
+            logFrame.view = "grid"
+            logFrame.selectedCatalogKey = nil
+            logFrame.selectedBossName = nil
+            UI:Refresh()
+        end)
+        return tab
+    end
+
+    logFrame.tabs = {
+        makeTab(1, "Dungeons"),
+        makeTab(2, "Raids"),
+    }
+    logFrame.numTabs = 2
+    logFrame.tabs[1]:SetPoint("TOPLEFT", logFrame, "BOTTOMLEFT", 10, 2)
+    logFrame.tabs[2]:SetPoint("LEFT", logFrame.tabs[1], "RIGHT", 4, 0)
+end
+
+function UI:UpdateTabs()
+    if not logFrame.tabs then return end
+    local active = (logFrame.gridTab == "raids") and 2 or 1
+    if PanelTemplates_SetTab then
+        PanelTemplates_SetTab(logFrame, active)
+        return
+    end
+    for id, tab in ipairs(logFrame.tabs) do
+        if id == active then tab:Disable() else tab:Enable() end
+    end
+end
+
+function UI:SetTabsShown(shown)
+    if not logFrame.tabs then return end
+    for _, tab in ipairs(logFrame.tabs) do
+        if shown then tab:Show() else tab:Hide() end
+    end
 end
 
 function UI:ShowUI()
@@ -90,6 +137,7 @@ end
 function UI:ClearSelection()
     if logFrame then
         logFrame.view = "grid"
+        logFrame.gridTab = "dungeons"
         logFrame.selectedCatalogKey = nil
         logFrame.selectedBossName = nil
     end
@@ -182,6 +230,8 @@ local function acquireTile(pool, parent, index)
 end
 
 function UI:Refresh()
+    self:SetTabsShown(true)
+    self:UpdateTabs()
     local view = logFrame.view
     if view == "dungeon" then
         hideFrom(logFrame.tilePool, 1)
@@ -213,11 +263,17 @@ function UI:Refresh()
 end
 
 function UI:RefreshGrid()
-    logFrame.header:SetText("Adventure Guide")
-    logFrame.subtitle:SetText("All dungeons and raids, by level")
+    local isRaid = (logFrame.gridTab == "raids")
+    if isRaid then
+        logFrame.header:SetText("Raids")
+        logFrame.subtitle:SetText("All raids, by level")
+    else
+        logFrame.header:SetText("Dungeons")
+        logFrame.subtitle:SetText("All dungeons, by level")
+    end
 
     local content = logFrame.content
-    local entries = DungeonLog.modules.Catalog:GetSortedEntries()
+    local entries = DungeonLog.modules.Catalog:GetEntriesByKind(isRaid)
     local Log = DungeonLog.modules.Log
 
     local contentW = logFrame.scroll:GetWidth()
