@@ -82,19 +82,11 @@ function Config:RegisterSlashCommand()
     SLASH_DUNGEONLOG1 = "/dungeonlog"
     SLASH_DUNGEONLOG2 = "/dl"
     SlashCmdList["DUNGEONLOG"] = function(msg)
-        msg = (msg or ""):gsub("^%s+", ""):gsub("%s+$", "")
-        local cmd, rest = msg:match("^(%S+)%s*(.-)$")
-        cmd = (cmd or ""):lower()
-        if cmd == "config" then
+        msg = (msg or ""):lower():gsub("^%s+", ""):gsub("%s+$", "")
+        if msg == "config" then
             Config:ShowUI()
-        elseif cmd == "reset" then
+        elseif msg == "reset" then
             StaticPopup_Show("DUNGEONLOG_RESET")
-        elseif cmd == "unlock" then
-            DungeonLog.modules.Debug:UnlockByName(rest)
-        elseif cmd == "debug" then
-            DungeonLog.modules.Debug:ToggleDebug()
-        elseif cmd == "dummy" then
-            DungeonLog.modules.Debug:ToggleDummyData()
         else
             DungeonLog.modules.UI:ShowUI()
         end
