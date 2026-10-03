@@ -2,14 +2,14 @@ local Catalog = {}
 DungeonLog.modules.Catalog = Catalog
 
 Catalog.entries = {
-    { name = "Ragefire Chasm", parentName = nil, minLevel = 13, maxLevel = 18, isRaid = false,
+    { name = "Ragefire Chasm", minLevel = 13, maxLevel = 18, isRaid = false,
       icon = "Interface\\Icons\\Spell_Fire_Fire", bosses = {
         { order = 1, name = "Oggleflint" },
         { order = 2, name = "Taragaman the Hungerer" },
         { order = 3, name = "Jergosh the Invoker" },
         { order = 4, name = "Bazzalan" },
     }},
-    { name = "Ruins of Lordaeron", parentName = nil, minLevel = 16, maxLevel = 22, isRaid = false,
+    { name = "Ruins of Lordaeron", minLevel = 15, maxLevel = 20, isRaid = false,
       icon = "Interface\\Icons\\INV_Misc_Bone_HumanSkull_01", bosses = {
         { order = 1, name = "Witherfang" },
         { order = 2, name = "The Baron" },
@@ -18,20 +18,20 @@ Catalog.entries = {
         { order = 5, name = "Bjork" },
         { order = 6, name = "Rath'Mael" },
     }},
-    { name = "The Hall of Thanes", parentName = nil, minLevel = 13, maxLevel = 18, isRaid = false,
+    { name = "The Hall of Thanes", minLevel = 13, maxLevel = 18, isRaid = false,
       icon = "Interface\\Icons\\INV_Hammer_05", bosses = {
         { order = 1, name = "Faldrim Anvilmar" },
         { order = 2, name = "Magmatus" },
         { order = 3, name = "Plunder" },
         { order = 4, name = "Dirgen Dirgehammer" },
     }},
-    { name = "Excavation Site: Wetlands", parentName = nil, minLevel = 26, maxLevel = 32, isRaid = false,
+    { name = "Excavation Site: Wetlands", minLevel = 26, maxLevel = 31, isRaid = false,
       icon = "Interface\\Icons\\INV_Misc_Shovel_01", bosses = {
         { order = 1, name = "Saltspine" },
         { order = 2, name = "Shadetooth" },
         { order = 3, name = "Relic Guardian" },
     }},
-    { name = "City of Dalaran", parentName = nil, minLevel = 28, maxLevel = 35, isRaid = false,
+    { name = "City of Dalaran", minLevel = 28, maxLevel = 33, isRaid = false,
       icon = "Interface\\Icons\\Spell_Arcane_TeleportDalaran", bosses = {
         { order = 1, name = "Atrexis the Grave Knight" },
         { order = 2, name = "Arcane Anomaly" },
@@ -41,7 +41,7 @@ Catalog.entries = {
         { order = 6, name = "Lyn the Ignored" },
         { order = 7, name = "Shade of the Archmage" },
     }},
-    { name = "The Deadmines", parentName = nil, minLevel = 17, maxLevel = 26, isRaid = false,
+    { name = "The Deadmines", minLevel = 17, maxLevel = 26, isRaid = false,
       icon = "Interface\\Icons\\INV_Misc_Map_01", bosses = {
         { order = 1, name = "Rhahk'Zor" },
         { order = 2, name = "Sneed's Shredder" },
@@ -51,7 +51,7 @@ Catalog.entries = {
         { order = 6, name = "Edwin VanCleef" },
         { order = 7, name = "Cookie" },
     }},
-    { name = "Wailing Caverns", parentName = nil, minLevel = 17, maxLevel = 24, isRaid = false,
+    { name = "Wailing Caverns", minLevel = 17, maxLevel = 24, isRaid = false,
       icon = "Interface\\Icons\\Ability_Hunter_Pet_Raptor", bosses = {
         { order = 1, name = "Lady Anacondra" },
         { order = 2, name = "Lord Cobrahn" },
@@ -62,7 +62,7 @@ Catalog.entries = {
         { order = 7, name = "Verdan the Everliving" },
         { order = 8, name = "Mutanus the Devourer" },
     }},
-    { name = "Shadowfang Keep", parentName = nil, minLevel = 22, maxLevel = 30, isRaid = false,
+    { name = "Shadowfang Keep", minLevel = 22, maxLevel = 30, isRaid = false,
       icon = "Interface\\Icons\\Ability_Mount_WhiteDireWolf", bosses = {
         { order = 1, name = "Rethilgore" },
         { order = 2, name = "Razorclaw the Butcher" },
@@ -73,7 +73,7 @@ Catalog.entries = {
         { order = 7, name = "Wolf Master Nandos" },
         { order = 8, name = "Archmage Arugal" },
     }},
-    { name = "Blackfathom Deeps", parentName = nil, minLevel = 24, maxLevel = 32, isRaid = false,
+    { name = "Blackfathom Deeps", minLevel = 24, maxLevel = 32, isRaid = false,
       icon = "Interface\\Icons\\Spell_Frost_SummonWaterElemental", bosses = {
         { order = 1, name = "Ghamoo-ra" },
         { order = 2, name = "Lady Sarevess" },
@@ -83,7 +83,7 @@ Catalog.entries = {
         { order = 6, name = "Twilight Lord Kelris" },
         { order = 7, name = "Aku'mai" },
     }},
-    { name = "Stormwind Stockade", parentName = nil, minLevel = 24, maxLevel = 32, isRaid = false,
+    { name = "Stormwind Stockade", minLevel = 24, maxLevel = 32, isRaid = false,
       icon = "Interface\\Icons\\INV_Misc_Key_11", bosses = {
         { order = 1, name = "Targorr the Dread" },
         { order = 2, name = "Kam Deepfury" },
@@ -91,7 +91,7 @@ Catalog.entries = {
         { order = 4, name = "Dextren Ward" },
         { order = 5, name = "Bazil Thredd" },
     }},
-    { name = "Gnomeregan", parentName = nil, minLevel = 29, maxLevel = 38, isRaid = false,
+    { name = "Gnomeregan", minLevel = 29, maxLevel = 38, isRaid = false,
       icon = "Interface\\Icons\\INV_Gizmo_02", bosses = {
         { order = 1, name = "Grubbis" },
         { order = 2, name = "Viscous Fallout" },
@@ -99,7 +99,7 @@ Catalog.entries = {
         { order = 4, name = "Crowd Pummeler 9-60" },
         { order = 5, name = "Mekgineer Thermaplugg" },
     }},
-    { name = "Razorfen Kraul", parentName = nil, minLevel = 30, maxLevel = 40, isRaid = false,
+    { name = "Razorfen Kraul", minLevel = 29, maxLevel = 38, isRaid = false,
       icon = "Interface\\Icons\\Ability_Hunter_Pet_Boar", bosses = {
         { order = 1, name = "Roogug" },
         { order = 2, name = "Aggem Thorncurse" },
@@ -108,31 +108,26 @@ Catalog.entries = {
         { order = 5, name = "Agathelos the Raging" },
         { order = 6, name = "Charlga Razorflank" },
     }},
-    { name = "Scarlet Monastery - Graveyard", parentName = "Scarlet Monastery",
-      minLevel = 26, maxLevel = 36, isRaid = false, icon = "Interface\\Icons\\Spell_Holy_PrayerOfHealing",
-      bosses = {
-        { order = 1, name = "Interrogator Vishas" },
-        { order = 2, name = "Bloodmage Thalnos" },
+    { name = "Scarlet Monastery", minLevel = 30, maxLevel = 46, isRaid = false,
+      icon = "Interface\\Icons\\Spell_Holy_HolySmite", wings = {
+        { name = "Graveyard", minLevel = 30, maxLevel = 38, bosses = {
+            { order = 1, name = "Interrogator Vishas" },
+            { order = 2, name = "Bloodmage Thalnos" },
+        }},
+        { name = "Library", minLevel = 33, maxLevel = 41, bosses = {
+            { order = 1, name = "Houndmaster Loksey" },
+            { order = 2, name = "Arcanist Doan" },
+        }},
+        { name = "Armory", minLevel = 36, maxLevel = 44, bosses = {
+            { order = 1, name = "Herod" },
+        }},
+        { name = "Cathedral", minLevel = 38, maxLevel = 46, bosses = {
+            { order = 1, name = "High Inquisitor Fairbanks" },
+            { order = 2, name = "Scarlet Commander Mograine" },
+            { order = 3, name = "High Inquisitor Whitemane" },
+        }},
     }},
-    { name = "Scarlet Monastery - Library", parentName = "Scarlet Monastery",
-      minLevel = 29, maxLevel = 39, isRaid = false, icon = "Interface\\Icons\\Spell_Holy_MindVision",
-      bosses = {
-        { order = 1, name = "Houndmaster Loksey" },
-        { order = 2, name = "Arcanist Doan" },
-    }},
-    { name = "Scarlet Monastery - Armory", parentName = "Scarlet Monastery",
-      minLevel = 32, maxLevel = 42, isRaid = false, icon = "Interface\\Icons\\INV_Chest_Plate04",
-      bosses = {
-        { order = 1, name = "Herod" },
-    }},
-    { name = "Scarlet Monastery - Cathedral", parentName = "Scarlet Monastery",
-      minLevel = 35, maxLevel = 45, isRaid = false, icon = "Interface\\Icons\\Spell_Holy_HolySmite",
-      bosses = {
-        { order = 1, name = "High Inquisitor Fairbanks" },
-        { order = 2, name = "Scarlet Commander Mograine" },
-        { order = 3, name = "High Inquisitor Whitemane" },
-    }},
-    { name = "Razorfen Downs", parentName = nil, minLevel = 37, maxLevel = 46, isRaid = false,
+    { name = "Razorfen Downs", minLevel = 37, maxLevel = 46, isRaid = false,
       icon = "Interface\\Icons\\Ability_Creature_Cursed_01", bosses = {
         { order = 1, name = "Tuten'kash" },
         { order = 2, name = "Mordresh Fire Eye" },
@@ -140,7 +135,7 @@ Catalog.entries = {
         { order = 4, name = "Ragglesnout" },
         { order = 5, name = "Amnennar the Coldbringer" },
     }},
-    { name = "Uldaman", parentName = nil, minLevel = 41, maxLevel = 51, isRaid = false,
+    { name = "Uldaman", minLevel = 41, maxLevel = 51, isRaid = false,
       icon = "Interface\\Icons\\INV_Misc_Idol_03", bosses = {
         { order = 1, name = "Revelosh" },
         { order = 2, name = "Baelog" },
@@ -150,7 +145,7 @@ Catalog.entries = {
         { order = 6, name = "Grimlok" },
         { order = 7, name = "Archaedas" },
     }},
-    { name = "Zul'Farrak", parentName = nil, minLevel = 44, maxLevel = 54, isRaid = false,
+    { name = "Zul'Farrak", minLevel = 44, maxLevel = 54, isRaid = false,
       icon = "Interface\\Icons\\Ability_Rogue_Sprint", bosses = {
         { order = 1, name = "Gahz'rilla" },
         { order = 2, name = "Antu'sul" },
@@ -160,7 +155,7 @@ Catalog.entries = {
         { order = 6, name = "Shadowpriest Sezz'ziz" },
         { order = 7, name = "Chief Ukorz Sandscalp" },
     }},
-    { name = "Maraudon", parentName = nil, minLevel = 46, maxLevel = 55, isRaid = false,
+    { name = "Maraudon", minLevel = 46, maxLevel = 55, isRaid = false,
       icon = "Interface\\Icons\\Spell_Nature_Thorns", bosses = {
         { order = 1, name = "Noxxion" },
         { order = 2, name = "Razorlash" },
@@ -171,7 +166,7 @@ Catalog.entries = {
         { order = 7, name = "Rotgrip" },
         { order = 8, name = "Princess Theradras" },
     }},
-    { name = "Temple of Atal'Hakkar", parentName = nil, minLevel = 50, maxLevel = 60, isRaid = false,
+    { name = "Temple of Atal'Hakkar", minLevel = 50, maxLevel = 60, isRaid = false,
       icon = "Interface\\Icons\\Spell_Nature_Sleep", bosses = {
         { order = 1, name = "Atal'alarion" },
         { order = 2, name = "Jammal'an the Prophet" },
@@ -181,7 +176,7 @@ Catalog.entries = {
         { order = 6, name = "Morphaz" },
         { order = 7, name = "Shade of Eranikus" },
     }},
-    { name = "Blackrock Depths", parentName = nil, minLevel = 52, maxLevel = 60, isRaid = false,
+    { name = "Blackrock Depths", minLevel = 52, maxLevel = 60, isRaid = false,
       icon = "Interface\\Icons\\Spell_Fire_Incinerate", bosses = {
         { order = 1, name = "High Interrogator Gerstahn" },
         { order = 2, name = "Lord Roccor" },
@@ -203,7 +198,7 @@ Catalog.entries = {
         { order = 18, name = "Magmus" },
         { order = 19, name = "Emperor Dagran Thaurissan" },
     }},
-    { name = "Lower Blackrock Spire", parentName = nil, minLevel = 55, maxLevel = 60, isRaid = false,
+    { name = "Lower Blackrock Spire", minLevel = 55, maxLevel = 60, isRaid = false,
       icon = "Interface\\Icons\\Spell_Fire_FlameShock", bosses = {
         { order = 1, name = "Highlord Omokk" },
         { order = 2, name = "Shadow Hunter Vosh'gajin" },
@@ -215,7 +210,7 @@ Catalog.entries = {
         { order = 8, name = "Halycon" },
         { order = 9, name = "Overlord Wyrmthalak" },
     }},
-    { name = "Upper Blackrock Spire", parentName = nil, minLevel = 55, maxLevel = 60, isRaid = false,
+    { name = "Upper Blackrock Spire", minLevel = 59, maxLevel = 60, isRaid = false,
       icon = "Interface\\Icons\\Spell_Fire_SelfDestruct", bosses = {
         { order = 1, name = "Pyroguard Emberseer" },
         { order = 2, name = "Solakar Flamewreath" },
@@ -226,36 +221,33 @@ Catalog.entries = {
         { order = 7, name = "The Beast" },
         { order = 8, name = "General Drakkisath" },
     }},
-    { name = "Dire Maul - East", parentName = "Dire Maul",
-      minLevel = 36, maxLevel = 46, isRaid = false, icon = "Interface\\Icons\\Spell_Nature_NatureTouchGrow",
-      bosses = {
-        { order = 1, name = "Pusillin" },
-        { order = 2, name = "Zevrim Thornhoof" },
-        { order = 3, name = "Hydrospawn" },
-        { order = 4, name = "Lethtendris" },
-        { order = 5, name = "Alzzin the Wildshaper" },
+    { name = "Dire Maul", minLevel = 54, maxLevel = 60, isRaid = false,
+      icon = "Interface\\Icons\\INV_Crown_01", wings = {
+        { name = "East", minLevel = 54, maxLevel = 60, bosses = {
+            { order = 1, name = "Pusillin" },
+            { order = 2, name = "Zevrim Thornhoof" },
+            { order = 3, name = "Hydrospawn" },
+            { order = 4, name = "Lethtendris" },
+            { order = 5, name = "Alzzin the Wildshaper" },
+        }},
+        { name = "West", minLevel = 56, maxLevel = 60, bosses = {
+            { order = 1, name = "Tendris Warpwood" },
+            { order = 2, name = "Illyanna Ravenoak" },
+            { order = 3, name = "Magister Kalendris" },
+            { order = 4, name = "Immol'thar" },
+            { order = 5, name = "Prince Tortheldrin" },
+        }},
+        { name = "North", minLevel = 56, maxLevel = 60, bosses = {
+            { order = 1, name = "Guard Mol'dar" },
+            { order = 2, name = "Stomper Kreeg" },
+            { order = 3, name = "Guard Fengus" },
+            { order = 4, name = "Guard Slip'kik" },
+            { order = 5, name = "Captain Kromcrush" },
+            { order = 6, name = "Cho'Rush the Observer" },
+            { order = 7, name = "King Gordok" },
+        }},
     }},
-    { name = "Dire Maul - West", parentName = "Dire Maul",
-      minLevel = 54, maxLevel = 60, isRaid = false, icon = "Interface\\Icons\\Spell_Arcane_PortalDarnassus",
-      bosses = {
-        { order = 1, name = "Tendris Warpwood" },
-        { order = 2, name = "Illyanna Ravenoak" },
-        { order = 3, name = "Magister Kalendris" },
-        { order = 4, name = "Immol'thar" },
-        { order = 5, name = "Prince Tortheldrin" },
-    }},
-    { name = "Dire Maul - North", parentName = "Dire Maul",
-      minLevel = 56, maxLevel = 60, isRaid = false, icon = "Interface\\Icons\\INV_Crown_01",
-      bosses = {
-        { order = 1, name = "Guard Mol'dar" },
-        { order = 2, name = "Stomper Kreeg" },
-        { order = 3, name = "Guard Fengus" },
-        { order = 4, name = "Guard Slip'kik" },
-        { order = 5, name = "Captain Kromcrush" },
-        { order = 6, name = "Cho'Rush the Observer" },
-        { order = 7, name = "King Gordok" },
-    }},
-    { name = "Scholomance", parentName = nil, minLevel = 58, maxLevel = 60, isRaid = false,
+    { name = "Scholomance", minLevel = 58, maxLevel = 60, isRaid = false,
       icon = "Interface\\Icons\\Spell_Shadow_RaiseDead", bosses = {
         { order = 1, name = "Kirtonos the Herald" },
         { order = 2, name = "Jandice Barov" },
@@ -271,7 +263,7 @@ Catalog.entries = {
         { order = 12, name = "Lady Illucia Barov" },
         { order = 13, name = "Darkmaster Gandling" },
     }},
-    { name = "Stratholme", parentName = nil, minLevel = 58, maxLevel = 60, isRaid = false,
+    { name = "Stratholme", minLevel = 58, maxLevel = 60, isRaid = false,
       icon = "Interface\\Icons\\Spell_Shadow_DeathPact", bosses = {
         { order = 1, name = "Hearthsinger Forresten" },
         { order = 2, name = "The Unforgiven" },
@@ -288,7 +280,7 @@ Catalog.entries = {
         { order = 13, name = "Ramstein the Gorger" },
         { order = 14, name = "Baron Rivendare" },
     }},
-    { name = "Onyxia's Lair", parentName = nil, minLevel = 60, maxLevel = 60, isRaid = true,
+    { name = "Onyxia's Lair", minLevel = 60, maxLevel = 60, isRaid = true,
       icon = "Interface\\Icons\\INV_Misc_Head_Dragon_Black", bosses = {
         { order = 1, name = "Onyxia" },
     }},
@@ -335,5 +327,19 @@ function Catalog:GetEntryByKey(name)
 end
 
 function Catalog:GetLiveDBKey(entry)
-    return entry.parentName or entry.name
+    return entry.name
+end
+
+function Catalog:IterBosses(entry, callback)
+    if entry.wings then
+        for _, wing in ipairs(entry.wings) do
+            for _, bossDef in ipairs(wing.bosses) do
+                callback(bossDef, wing)
+            end
+        end
+    else
+        for _, bossDef in ipairs(entry.bosses) do
+            callback(bossDef, nil)
+        end
+    end
 end

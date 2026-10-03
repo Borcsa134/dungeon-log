@@ -4,6 +4,7 @@ DungeonLog.modules.UI = UI
 local logFrame
 
 local ROW_HEIGHT = 28
+local SECTION_HEIGHT = 24
 local LOOT_ROW_HEIGHT = 26
 local TILE_W = 150
 local TILE_H = 72
@@ -185,6 +186,9 @@ local function acquireRow(pool, parent, index, height)
     row.icon:SetSize(height - 8, height - 8)
     row.icon:SetDesaturated(false)
     row.icon:SetVertexColor(1, 1, 1)
+    row.icon:Show()
+    row.label:ClearAllPoints()
+    row.label:SetPoint("LEFT", row.icon, "RIGHT", 6, 0)
     row:Show()
     return row
 end
@@ -289,20 +293,7 @@ function UI:RefreshGrid()
         tile:SetPoint("TOPLEFT", content, "TOPLEFT", col * (TILE_W + TILE_PAD), -(row * (TILE_H + TILE_PAD)))
 
         local liveKey = DungeonLog.modules.Catalog:GetLiveDBKey(entry)
-        local discovered = false
-        if DungeonLogDB.dungeons[liveKey] then
-            if entry.parentName then
-                for _, boss in ipairs(entry.bosses) do
-                    local liveBoss = Log:FindBossByName(liveKey, boss.name)
-                    if liveBoss and liveBoss.discovered then
-                        discovered = true
-                        break
-                    end
-                end
-            else
-                discovered = true
-            end
-        end
+        local discovered = DungeonLogDB.dungeons[liveKey] ~= nil
 
         tile.icon:SetTexture(entry.icon)
         local levelText = string.format("Levels %d-%d", entry.minLevel, entry.maxLevel)
@@ -359,9 +350,28 @@ function UI:RefreshDungeonPage()
     local liveKey = DungeonLog.modules.Catalog:GetLiveDBKey(entry)
     local width = logFrame.scroll:GetWidth() - 8
 
+    local index = 0
     local y = 0
-    for i, bossDef in ipairs(entry.bosses) do
-        local row = acquireRow(logFrame.bossPool, content, i, ROW_HEIGHT)
+
+    local function addSectionHeader(wing)
+        index = index + 1
+        local row = acquireRow(logFrame.bossPool, content, index, SECTION_HEIGHT)
+        row:SetWidth(width)
+        row:SetPoint("TOPLEFT", content, "TOPLEFT", 4, -y)
+        row.icon:SetTexture(nil)
+        row.icon:Hide()
+        row.label:ClearAllPoints()
+        row.label:SetPoint("LEFT", row, "LEFT", 8, 0)
+        row.label:SetText(string.format("%s (%d-%d)", wing.name, wing.minLevel, wing.maxLevel))
+        row.label:SetTextColor(1, 0.82, 0)
+        row.right:SetText("")
+        row.bg:SetColorTexture(0, 0, 0, 0.35)
+        y = y + SECTION_HEIGHT
+    end
+
+    local function addBossRow(bossDef)
+        index = index + 1
+        local row = acquireRow(logFrame.bossPool, content, index, ROW_HEIGHT)
         row:SetWidth(width)
         row:SetPoint("TOPLEFT", content, "TOPLEFT", 4, -y)
 
@@ -394,7 +404,7 @@ function UI:RefreshDungeonPage()
             row.right:SetText("")
         end
 
-        if i % 2 == 0 then
+        if index % 2 == 0 then
             row.bg:SetColorTexture(1, 1, 1, 0.04)
         else
             row.bg:SetColorTexture(0, 0, 0, 0)
@@ -403,7 +413,20 @@ function UI:RefreshDungeonPage()
         y = y + ROW_HEIGHT
     end
 
-    hideFrom(logFrame.bossPool, #entry.bosses + 1)
+    if entry.wings then
+        for _, wing in ipairs(entry.wings) do
+            addSectionHeader(wing)
+            for _, bossDef in ipairs(wing.bosses) do
+                addBossRow(bossDef)
+            end
+        end
+    else
+        for _, bossDef in ipairs(entry.bosses) do
+            addBossRow(bossDef)
+        end
+    end
+
+    hideFrom(logFrame.bossPool, index + 1)
     content:SetHeight(math.max(y, 1))
 end
 
