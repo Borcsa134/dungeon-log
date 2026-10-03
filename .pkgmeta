@@ -1,0 +1,7 @@
+ignore:
+  - .git
+  - .github
+  - .gitignore
+  - .pkgmeta
+  - README.md
+  - Makefile
