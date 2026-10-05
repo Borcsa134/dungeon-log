@@ -31,6 +31,9 @@ local lootWindows = {}
 
 local pendingItems = {}
 
+local lastKill = nil
+local KILL_LOOT_WINDOW = 60
+
 local debugEnabled = false
 local function dprint(...)
     if debugEnabled then
@@ -60,10 +63,17 @@ end
 
 function Log:RegisterEvents()
     local frame = CreateFrame("Frame")
-    frame:RegisterEvent("PLAYER_ENTERING_WORLD")
-    frame:RegisterEvent("ENCOUNTER_END")
-    frame:RegisterEvent("ENCOUNTER_LOOT_RECEIVED")
-    frame:RegisterEvent("GET_ITEM_INFO_RECEIVED")
+    local function tryRegister(event)
+        local ok = pcall(frame.RegisterEvent, frame, event)
+        if not ok then
+            dprint("Event not available on this client:", event)
+        end
+    end
+    tryRegister("PLAYER_ENTERING_WORLD")
+    tryRegister("ENCOUNTER_END")
+    tryRegister("ENCOUNTER_LOOT_RECEIVED")
+    tryRegister("LOOT_OPENED")
+    tryRegister("GET_ITEM_INFO_RECEIVED")
     frame:SetScript("OnEvent", function(self, event, ...)
         if event == "PLAYER_ENTERING_WORLD" then
             Log:OnEnterWorld()
@@ -71,6 +81,8 @@ function Log:RegisterEvents()
             Log:OnEncounterEnd(...)
         elseif event == "ENCOUNTER_LOOT_RECEIVED" then
             Log:OnEncounterLoot(...)
+        elseif event == "LOOT_OPENED" then
+            Log:OnLootOpened()
         elseif event == "GET_ITEM_INFO_RECEIVED" then
             Log:OnItemInfoReceived(...)
         end
@@ -87,14 +99,18 @@ end
 
 function Log:OnEnterWorld()
     local name = self:GetCurrentDungeonName()
-    if name and not DungeonLogDB.dungeons[name] then
-        DungeonLogDB.dungeons[name] = {
-            discovered = true,
-            firstEntered = time(),
-            bosses = {},
-        }
-        DungeonLog.modules.UI:RefreshIfShown()
+    if not name then return end
+    if DungeonLogDB.dungeons[name] then
+        dprint("Dungeon already discovered:", name)
+        return
     end
+    dprint("Dungeon discovered:", name)
+    DungeonLogDB.dungeons[name] = {
+        discovered = true,
+        firstEntered = time(),
+        bosses = {},
+    }
+    DungeonLog.modules.UI:RefreshIfShown()
 end
 
 function Log:EnsureBoss(encounterID, encounterName)
@@ -125,7 +141,7 @@ function Log:EnsureBoss(encounterID, encounterName)
 end
 
 function Log:OnEncounterEnd(encounterID, encounterName, difficultyID, groupSize, success)
-    dprint("ENCOUNTER_END", encounterID, encounterName, "success="..tostring(success))
+    dprint("Boss defeated:", encounterID, encounterName, "success="..tostring(success))
 
     local boss = self:EnsureBoss(encounterID, encounterName)
     if not boss then return end
@@ -137,19 +153,61 @@ function Log:OnEncounterEnd(encounterID, encounterName, difficultyID, groupSize,
         boss.killed = true
         boss.firstKill = boss.firstKill or time()
         lootWindows[encounterID] = {}
+        lastKill = {
+            encounterID = encounterID,
+            name = encounterName,
+            dungeonName = self:GetCurrentDungeonName(),
+            time = GetTime(),
+        }
     end
 
     DungeonLog.modules.UI:RefreshIfShown()
 end
 
 function Log:OnEncounterLoot(encounterID, itemID, itemLink, quantity, playerName, classFileName)
-    dprint("ENCOUNTER_LOOT_RECEIVED", encounterID, itemID, itemLink, playerName)
+    dprint("Boss loot received:", encounterID, itemID, itemLink, playerName)
     if not itemID then return end
 
     local boss = self:EnsureBoss(encounterID, nil)
     if not boss then return end
 
     self:RecordLoot(boss, encounterID, itemID, itemLink)
+
+    DungeonLog.modules.UI:RefreshIfShown()
+end
+
+function Log:OnLootOpened()
+    local dungeonName = self:GetCurrentDungeonName()
+    if not dungeonName then return end
+
+    if not lastKill then return end
+    if lastKill.dungeonName and lastKill.dungeonName ~= dungeonName then return end
+    if (GetTime() - lastKill.time) > KILL_LOOT_WINDOW then return end
+
+    if UnitExists("target") then
+        local targetName = UnitName("target")
+        if targetName and normName(targetName) ~= normName(lastKill.name) then
+            dprint("LOOT_OPENED skipped: target", targetName, "~=", lastKill.name)
+            return
+        end
+    end
+
+    local n = GetNumLootItems()
+    if not n or n == 0 then return end
+
+    local boss = self:EnsureBoss(lastKill.encounterID, lastKill.name)
+    if not boss then return end
+
+    for slot = 1, n do
+        if GetLootSlotType(slot) == LOOT_SLOT_ITEM then
+            local link = GetLootSlotLink(slot)
+            local itemID = link and tonumber(link:match("item:(%d+)"))
+            if itemID then
+                dprint("Received loot:", lastKill.encounterID, itemID, link)
+                self:RecordLoot(boss, lastKill.encounterID, itemID, link)
+            end
+        end
+    end
 
     DungeonLog.modules.UI:RefreshIfShown()
 end
@@ -214,26 +272,11 @@ function Log:GetDropRate(boss, itemID)
     return boss.killCount and boss.killCount > 0 and (item.seen / boss.killCount * 100) or 0
 end
 
-function Log:NormalizeName(s)
-    return normName(s)
-end
-
-function Log:FindBossByName(liveDBKey, bossName)
-    local dungeon = liveDBKey and DungeonLogDB.dungeons[liveDBKey]
-    if not dungeon then return nil, nil end
-    local target = normName(bossName)
-    for id, boss in pairs(dungeon.bosses) do
-        if normName(boss.name) == target then
-            return boss, id
-        end
-    end
-    return nil, nil
-end
-
 function Log:ResetAll()
     DungeonLogDB.dungeons = {}
     wipe(lootWindows)
     wipe(pendingItems)
+    lastKill = nil
     DungeonLog.modules.UI:ClearSelection()
     DungeonLog.modules.UI:RefreshIfShown()
 end

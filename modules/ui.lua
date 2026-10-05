@@ -73,7 +73,7 @@ function UI:CreateUI()
     logFrame.view = "grid"
     logFrame.gridTab = "dungeons"
     logFrame.selectedCatalogKey = nil
-    logFrame.selectedBossName = nil
+    logFrame.selectedEncounterID = nil
 
     self:CreateTabs()
 end
@@ -88,7 +88,7 @@ function UI:CreateTabs()
             logFrame.gridTab = (self:GetID() == 1) and "dungeons" or "raids"
             logFrame.view = "grid"
             logFrame.selectedCatalogKey = nil
-            logFrame.selectedBossName = nil
+            logFrame.selectedEncounterID = nil
             UI:Refresh()
         end)
         return tab
@@ -140,7 +140,7 @@ function UI:ClearSelection()
         logFrame.view = "grid"
         logFrame.gridTab = "dungeons"
         logFrame.selectedCatalogKey = nil
-        logFrame.selectedBossName = nil
+        logFrame.selectedEncounterID = nil
     end
 end
 
@@ -244,7 +244,7 @@ function UI:Refresh()
         logFrame.backButton:SetScript("OnClick", function()
             logFrame.view = "grid"
             logFrame.selectedCatalogKey = nil
-            logFrame.selectedBossName = nil
+            logFrame.selectedEncounterID = nil
             UI:Refresh()
         end)
         self:RefreshDungeonPage()
@@ -254,7 +254,7 @@ function UI:Refresh()
         logFrame.backButton:Show()
         logFrame.backButton:SetScript("OnClick", function()
             logFrame.view = "dungeon"
-            logFrame.selectedBossName = nil
+            logFrame.selectedEncounterID = nil
             UI:Refresh()
         end)
         self:RefreshLootPage()
@@ -278,7 +278,6 @@ function UI:RefreshGrid()
 
     local content = logFrame.content
     local entries = DungeonLog.modules.Catalog:GetEntriesByKind(isRaid)
-    local Log = DungeonLog.modules.Log
 
     local contentW = logFrame.scroll:GetWidth()
     if not contentW or contentW < TILE_W then
@@ -312,7 +311,7 @@ function UI:RefreshGrid()
             tile:SetScript("OnClick", function()
                 logFrame.view = "dungeon"
                 logFrame.selectedCatalogKey = key
-                logFrame.selectedBossName = nil
+                logFrame.selectedEncounterID = nil
                 UI:Refresh()
             end)
         else
@@ -334,7 +333,6 @@ end
 function UI:RefreshDungeonPage()
     local content = logFrame.content
     local entry = DungeonLog.modules.Catalog:GetEntryByKey(logFrame.selectedCatalogKey)
-    local Log = DungeonLog.modules.Log
     if not entry then
         hideFrom(logFrame.bossPool, 1)
         return
@@ -375,7 +373,8 @@ function UI:RefreshDungeonPage()
         row:SetWidth(width)
         row:SetPoint("TOPLEFT", content, "TOPLEFT", 4, -y)
 
-        local liveBoss = Log:FindBossByName(liveKey, bossDef.name)
+        local dungeon = DungeonLogDB.dungeons[liveKey]
+        local liveBoss = (dungeon and bossDef.encounterID) and dungeon.bosses[bossDef.encounterID] or nil
         if liveBoss and liveBoss.discovered then
             row.icon:SetTexture(liveBoss.killed and "Interface\\Icons\\Ability_Warrior_Challange"
                 or "Interface\\Icons\\Spell_Shadow_SummonImp")
@@ -389,10 +388,10 @@ function UI:RefreshDungeonPage()
                 row.right:SetText("not slain")
                 row.right:SetTextColor(0.7, 0.5, 0.5)
             end
-            local bossName = bossDef.name
+            local encID = bossDef.encounterID
             row:SetScript("OnClick", function()
                 logFrame.view = "loot"
-                logFrame.selectedBossName = bossName
+                logFrame.selectedEncounterID = encID
                 UI:Refresh()
             end)
         else
@@ -433,16 +432,17 @@ end
 function UI:RefreshLootPage()
     local content = logFrame.content
     local entry = DungeonLog.modules.Catalog:GetEntryByKey(logFrame.selectedCatalogKey)
-    local Log = DungeonLog.modules.Log
     if not entry then
         hideFrom(logFrame.lootPool, 1)
         return
     end
 
     local liveKey = DungeonLog.modules.Catalog:GetLiveDBKey(entry)
-    local boss = Log:FindBossByName(liveKey, logFrame.selectedBossName)
+    local dungeon = DungeonLogDB.dungeons[liveKey]
+    local boss = (dungeon and logFrame.selectedEncounterID) and dungeon.bosses[logFrame.selectedEncounterID] or nil
 
-    logFrame.header:SetText(entry.name .. " - " .. (logFrame.selectedBossName or "Encounter"))
+    local bossLabel = (boss and boss.name) or "Encounter"
+    logFrame.header:SetText(entry.name .. " - " .. bossLabel)
     local killCount = (boss and boss.killCount) or 0
     logFrame.subtitle:SetText(string.format("%d kill%s", killCount, killCount == 1 and "" or "s"))
 

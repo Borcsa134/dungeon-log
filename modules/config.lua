@@ -87,6 +87,11 @@ function Config:RegisterSlashCommand()
             Config:ShowUI()
         elseif msg == "reset" then
             StaticPopup_Show("DUNGEONLOG_RESET")
+        elseif msg == "debug" then
+            local enabled = not Config:GetSetting("debug")
+            Config:SetSetting("debug", enabled)
+            DungeonLog.modules.Log:SetDebug(enabled)
+            print("|cff66ccffDungeonLog:|r debug " .. (enabled and "enabled" or "disabled"))
         else
             DungeonLog.modules.UI:ShowUI()
         end
@@ -118,7 +123,6 @@ function Config:CreateMinimapButton()
         GameTooltip:SetOwner(self, "ANCHOR_LEFT")
         GameTooltip:AddLine("Dungeon Log")
         GameTooltip:AddLine("Click to open", 1, 1, 1)
-        GameTooltip:AddLine("/dl config for settings", 0.7, 0.7, 0.7)
         GameTooltip:Show()
     end)
 
@@ -151,7 +155,8 @@ end
 
 function Config:UpdateMinimapPosition()
     local angle = math.rad(DungeonLogDB.minimapAngle or 45)
-    local x = math.cos(angle) * 110
-    local y = math.sin(angle) * 110
+    local radius = (Minimap:GetWidth() / 2) + 5
+    local x = math.cos(angle) * radius
+    local y = math.sin(angle) * radius
     minimapButton:SetPoint("CENTER", Minimap, "CENTER", x, y)
 end
